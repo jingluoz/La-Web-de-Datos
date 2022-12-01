@@ -1,0 +1,30 @@
+PREFIX ex: <http://ex.org/a#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+CONSTRUCT {
+  ?Movie_iri a ex:Movie;
+	ex:budget ?b;
+	ex:id ?i;
+	ex:original_language ?original_language;
+	ex:popularity ?p;
+	ex:release_date ?release_date;
+	ex:revenue ?r;
+	ex:title ?title;
+	ex:vote_average ?va;
+	ex:vote_count ?vc;
+	ex:budget_over_rating ?budget_over_rating;
+}
+FROM <file:post.csv> 
+WHERE {
+	BIND (URI(CONCAT('http://ex.org/movies/', ?id)) AS ?Movie_iri)
+	BIND (xsd:integer(?budget) AS ?b)
+	BIND (xsd:integer(?id) AS ?i)
+  	BIND (xsd:decimal(?popularity) AS ?p)
+	BIND (xsd:decimal(?revenue) AS ?r)
+	BIND (xsd:decimal(?vote_average) AS ?va)
+	BIND (xsd:decimal(?vote_count) AS ?vc)
+	BIND (xsd:decimal(?budget_over_rating) AS ?bor )
+    ?revenue a ex:revenue;
+    ?budget a ex:budget;
+    FILTER(?revenue > ?budget)
+}
